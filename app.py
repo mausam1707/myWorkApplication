@@ -70,7 +70,11 @@ def login():
 @app.route('/enter_code')
 def enter_code():
     return render_template('enter_code.html')
+
 #Creating a funtion for sending OTP on mail
+@app.route("/")
+def send_verification_mail():
+    pass
 
 
 #defining a function to generate OTP 

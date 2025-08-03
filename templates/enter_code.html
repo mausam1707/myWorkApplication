@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter the OTP</title>
+    <style>
+        body{
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: white;
+        }
+        .enter_code{
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 40px 30px;
+            background-color: rgb(235, 231, 231);
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+        .enter_code h2{
+            color: #2e8b57;
+            margin-bottom: 20px;
+        }
+        .enter_code label{
+            display: block;
+            font-size: 15px;
+            margin-bottom: 10px;
+            color: #444;
+            text-align: left;
+        }
+        .enter_code input[type="number"]{
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            transition: border-color 0.7s;
+        }
+        .enter_code input[type="number"] :focus{
+            border-color: #2e8b57;
+            outline: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="enter_code">
+        <h2>We Have sent an OTP on your Registered Email</h2>
+        <form action="">
+            <label for="code">Enter code received on your Email</label>
+            <input type="number" id="code" name="code" maxlength="6" required placeholder="Enter OTP">
+            <button type="submit">Verify Code</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session 
 import bcrypt
 import sqlite3
+import random
+import smtplib
+from email.mime.text import MIMEText
 
 
 app = Flask(__name__)
@@ -32,9 +35,50 @@ def sign_up():
 def registered():
     return render_template('registered.html')
 
+#creatimg A secure Login with 2 Factor authentication
+@app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method=='POST':
+        username=request.form['username']
+        password=request.form['password'].encode('utf-8')
+
+        conn=get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE username=?", (username,))
+        user=cursor.fetchone()
+
+        if user:
+            stored_password=user['password']
+            if bcrypt.checkpw(password, stored_password):
+                code = generate_code()
+                email=user['email']
+
+                cursor.execute("UPDATE users SET CODE=? WHERE username=?", (code,username))
+                conn.commit()
+                conn.close()
+
+                session['username']=username
+                session['code']=code
+
+                send_verification_mail(email,code)
+                return redirect(url_for('enter_code'))\
+            
+        return render_template('error.html')
+    return render_template('login.html')
+
+#Creating a function for randoring a page for entering OTP
+@app.route('/enter_code')
+def enter_code():
+    return render_template('enter_code.html')
+#Creating a funtion for sending OTP on mail
+
+
+#defining a function to generate OTP 
+def generate_code():
+    return str(random.randint(100000,999999))
+
 
 #defining Database connection
-
 def get_db_connection():
     conn=sqlite3.connect('users.db')
     conn.row_factory=sqlite3.Row

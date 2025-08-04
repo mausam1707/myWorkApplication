@@ -60,11 +60,37 @@ def login():
                 session['username']=username
                 session['code']=code
 
-                send_verification_mail(email,code)
+                send_verification_mail(email,code,username)
                 return redirect(url_for('enter_code'))\
             
         return render_template('error.html')
     return render_template('login.html')
+
+#Creating Function for Sending Verification Code on Mail
+#Creating a funtion for sending OTP on mail
+def send_verification_mail(receipent_mail, code, username):
+    sender_mail="jeetraam538@gmail.com"
+    sender_password="xyz"
+
+    subject= "Do not share this code"
+    body=f"Hi {username}, Your verification code for loggin in is {code}. Please do not share this code with anyone"
+    msg=MIMEText(body)
+    msg['Subject']=subject
+    msg['From']=sender_mail
+    msg['to']=receipent_mail
+
+    try:
+        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+            server.login(sender_mail, sender_password)
+            server.sendmail(sender_mail, receipent_mail, msg.as_string())
+        print("✅✅Verificaion Mail sent successfully")
+
+    except Exception as e:
+        print(f"❌Failed to send mail: ", repr(e))
+    
 
 #Creating a function for randoring a page for entering OTP
 @app.route('/enter_code')
@@ -91,13 +117,12 @@ def verify():
             cursor.execute("UPDATE users SET code=NULL where username=?", (username,))
             conn.commit()
             conn.close()
+            session['logged_in']=True
+            return redirect(url_for('welcome'))
+        else:
+            return render_template('error.html'), Message="Incorrect Verification Code"
 
 
-
-#Creating a funtion for sending OTP on mail
-@app.route("/")
-def send_verification_mail():
-    pass
 
 
 #defining a function to generate OTP 

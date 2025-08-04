@@ -71,6 +71,29 @@ def login():
 def enter_code():
     return render_template('enter_code.html')
 
+#function for verifying Code
+@app.route('/verify', methods=['GET', 'POST'])
+def verify():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if request.method=='POST':
+        code_entered=request.form['code']
+        username=session['username']
+        conn=get_db_connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT code from users where username=?", (username,))
+        row=cursor.fetchone()
+        cursor.close()
+
+        if row and row['code']==code_entered:
+            conn=get_db_connection()
+            cursor=conn.cursor()
+            cursor.execute("UPDATE users SET code=NULL where username=?", (username,))
+            conn.commit()
+            conn.close()
+
+
+
 #Creating a funtion for sending OTP on mail
 @app.route("/")
 def send_verification_mail():

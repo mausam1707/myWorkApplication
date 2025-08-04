@@ -65,7 +65,7 @@
 <body>
     <div class="enter_code">
         <h2>We Have sent an OTP on your Registered Email</h2>
-        <form action="">
+        <form method="POST" action="/verify">
             <label for="code">Enter code received on your Email</label>
             <input type="number" id="code" name="code" maxlength="6" required placeholder="Enter OTP">
             <button type="submit">Verify Code</button>
